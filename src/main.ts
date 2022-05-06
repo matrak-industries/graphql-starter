@@ -7,6 +7,7 @@ import fetch from 'cross-fetch';
 import 'dotenv/config'
 import getProject from "./queries/getProject";
 import getRecordTypes from "./queries/getRecordTypes";
+import createClient from "./util/createClient";
 
 const { Authorization, ProjectId, Server } = process.env;
 
@@ -18,15 +19,7 @@ async function run() {
     process.exit(1)
   }
 
-  const client = new ApolloClient({
-    link: new HttpLink({
-      uri: Server,
-      headers: {
-        Authorization,
-      },
-      fetch }),
-    cache: new InMemoryCache()
-  });
+  const client = createClient(Server, Authorization);
 
   const { data: { Project } } = await client.query({
     query: getProject,
